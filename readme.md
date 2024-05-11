@@ -7,6 +7,10 @@ Can run both natively, and on the browser.
 
 ## Dependencies
 
+* `python3`
+* `sdl2`
+* `wabt`
+
 First, set up wasm compiler.
 
 ```bash
@@ -41,4 +45,20 @@ Note:
 * For compiling for wasm, make sure you source `setup_emcc.sh`
   first, it sets up some environment variables
 
+
+## Run
+
+### WASM
+
+Run a script to serve the html, then go to [localhost:8888].
+
+```bash
+./serve_wasm.sh
+```
+
+### Native
+
+```bash
+./build/wasm-valley
+```
 

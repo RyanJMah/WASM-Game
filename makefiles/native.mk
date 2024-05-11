@@ -1,4 +1,4 @@
-TARGET = main
+TARGET = wasm-valley
 OPT    = -O2
 CC     = clang
 DEBUG  = 0
