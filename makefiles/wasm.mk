@@ -10,4 +10,4 @@ define post_build
 	@wasm-objdump -h $1/$(TARGET_NAME).wasm
 endef
 
-include base.mk
+include makefiles/base.mk

@@ -1,7 +1,7 @@
 ifeq ($(TARGET_PLATFORM), native)
-    include native.mk
+    include makefiles/native.mk
 else ifeq ($(TARGET_PLATFORM), wasm)
-    include wasm.mk
+    include makefiles/wasm.mk
 else
     $(error TARGET_PLATFORM is not set correctly. Please set it to either 'native' or 'wasm')
 endif
