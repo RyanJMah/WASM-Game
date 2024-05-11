@@ -4,10 +4,7 @@
             "name": "default",
             "includePath": [
                 "${workspaceFolder}/inc",
-
                 "/opt/homebrew/include",
-                "/usr/include",
-
                 "${workspaceFolder}/emsdk/upstream/emscripten/system/include"
             ],
             "defines": [],
