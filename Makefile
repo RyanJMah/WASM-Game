@@ -5,8 +5,3 @@ else ifeq ($(TARGET_PLATFORM), wasm)
 else
     $(error TARGET_PLATFORM is not set correctly. Please set it to either 'native' or 'wasm')
 endif
-
-.PHONY: wasm_toolchain
-wasm_toolchain:
-	cd emsdk && ./emsdk install latest
-	cd emsdk && ./emsdk activate latest

@@ -7,10 +7,10 @@ Can run both natively, and on the browser.
 
 ## Dependencies
 
-First, update submodules.
+First, set up wasm compiler.
 
 ```bash
-git submodule update --init --recursive
+source ./emcc_setup.sh
 ```
 
 ### MacOS
@@ -36,5 +36,9 @@ export TARGET_PLATFORM=wasm
 
 make
 ```
+
+Note:
+* For compiling for wasm, make sure you source `setup_emcc.sh`
+  first, it sets up some environment variables
 
 
