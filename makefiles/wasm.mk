@@ -10,4 +10,6 @@ define post_build
 	@wasm-objdump -h $1/$(TARGET_NAME).wasm
 endef
 
-include makefiles/base.mk
+C_FLAGS += -s WASM=1 -s USE_SDL=2
+
+C_FLAGS += -D WASM

@@ -50,15 +50,24 @@ Note:
 
 ### WASM
 
-Run a script to serve the html, then go to localhost:8888 in your browser
+```bash
+cd build
+
+python3 -m http.server
+```
+
+For development, installing [entr](https://github.com/clibs/entr) is recommended.
+It will auto-restart the server whenever you re-build.
 
 ```bash
-./serve_wasm.sh
+cd build
+
+ls --color=never | entr -r python3 -m http.server
 ```
 
 ### Native
 
 ```bash
-./build/wasm-valley
+./build/main
 ```
 

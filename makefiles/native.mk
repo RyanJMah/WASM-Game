@@ -1,4 +1,4 @@
-TARGET = wasm-valley
+TARGET = main
 OPT    = -O2
 CC     = clang
 DEBUG  = 0
@@ -9,4 +9,12 @@ define post_build
 	@size $1/$(TARGET)
 endef
 
-include makefiles/base.mk
+OS_TYPE = macos
+
+ifeq ($(OS_TYPE), linux)
+    C_INCLUDES += -I /usr/include/SDL2
+    LD_FLAGS += -l SDL2
+else
+    C_INCLUDES += -I /opt/homebrew/include
+    LD_FLAGS += -l SDL2 -L /opt/homebrew/opt/sdl2/lib
+endif
