@@ -1,4 +1,6 @@
+#include <stdint.h>
 #include <SDL2/SDL.h>
+#include "macros.h"
 
 #ifdef WASM
 #include <emscripten.h>
@@ -8,26 +10,33 @@ static SDL_Window* window;   // Declare a window
 static SDL_Renderer* renderer;  // Declare a renderer
 
 #ifndef WASM
-static uint32_t g_quit = 0;
+    #define FRAME_RATE          ( 60 )
+    #define FRAME_TIME_TICKS    ( 1000 / FRAME_RATE )
+
+    static uint32_t g_quit = 0;
 #endif
 
 void main_loop()
 {
     SDL_Event e;
-
-    while (SDL_PollEvent(&e))
+    if ( SDL_PollEvent(&e) )
     {
-        if (e.type == SDL_QUIT)
+        switch (e.type)
         {
-        #ifdef WASM
-            emscripten_cancel_main_loop();
-        #else
-            g_quit = 1;
-        #endif
+            case SDL_QUIT:
+            {
+            #ifdef WASM
+                emscripten_cancel_main_loop();
+            #else
+                g_quit = 1;
+            #endif
 
-            break;
+                break;
+            }
+
         }
     }
+
 
     // Set the draw color to white
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
@@ -67,8 +76,18 @@ int main(int argc, char* argv[])
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
 #else
-    while ( !g_quit ) {
+    while ( !g_quit )
+    {
+        uint32_t start = SDL_GetTicks();
         main_loop();
+        uint32_t end = SDL_GetTicks();
+
+        uint32_t frame_time = end - start;
+
+        if ( frame_time < FRAME_TIME_TICKS )
+        {
+            SDL_Delay(FRAME_TIME_TICKS - frame_time);
+        }
     }
 
     SDL_DestroyRenderer(renderer);

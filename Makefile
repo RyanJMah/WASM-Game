@@ -19,8 +19,8 @@ C_INCLUDES += -I ./inc
 
 C_FLAGS += $(C_INCLUDES) $(OPT) -Wall -MMD -MP -MF"$(@:%.o=%.d)"
 
-ifeq ($(DEBUG), 1)
-	C_FLAGS += -g
+ifndef RELEASE
+	C_FLAGS += -g -DDEBUG
 endif
 
 ifeq ($(OS_TYPE), linux)
