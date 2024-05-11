@@ -10,23 +10,26 @@ Can run both natively, and on the browser.
 * `python3`
 * `sdl2`
 * `wabt`
+* `entr`
 
-First, set up wasm compiler.
+First, set up wasm compiler and install script dependencies.
 
 ```bash
-source ./emcc_setup.sh
+source ./scripts/emcc_setup.sh
+
+pip3 install -r requirements.txt
 ```
 
 ### MacOS
 
 ```bash
-brew install sdl2 wabt
+brew install sdl2 wabt entr
 ```
 
 ### Debian Linux
 
 ```bash
-sudo apt install libsdl2-dev wabt
+sudo apt install libsdl2-dev wabt entr
 ```
 
 ## Build
@@ -56,19 +59,10 @@ Note:
 
 ### WASM
 
-```bash
-cd build
-
-python3 -m http.server
-```
-
-For development, installing [entr](https://github.com/clibs/entr) is recommended.
-It will auto-restart the server whenever you re-build.
+Run `./serve_wasm.sh` then go to http://localhost:8080 on your browser.
 
 ```bash
-cd build
-
-ls --color=never | entr -r python3 -m http.server
+./scripts/serve_wasm.sh
 ```
 
 ### Native
@@ -76,4 +70,3 @@ ls --color=never | entr -r python3 -m http.server
 ```bash
 ./build/main
 ```
-

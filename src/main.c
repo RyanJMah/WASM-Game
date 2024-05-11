@@ -16,7 +16,7 @@ static SDL_Renderer* renderer;  // Declare a renderer
     static uint32_t g_quit = 0;
 #endif
 
-void main_loop()
+void main_loop(void)
 {
     SDL_Event e;
     if ( SDL_PollEvent(&e) )
@@ -39,7 +39,7 @@ void main_loop()
 
 
     // Set the draw color to white
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
 
     // Clear the entire screen to our selected color
     SDL_RenderClear(renderer);

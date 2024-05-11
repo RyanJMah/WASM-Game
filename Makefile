@@ -23,18 +23,9 @@ ifndef RELEASE
 	C_FLAGS += -g -DDEBUG
 endif
 
-ifeq ($(OS_TYPE), linux)
-    C_INCLUDES += -I /usr/include/SDL2
-    LD_FLAGS += -l SDL2
-else
-    C_INCLUDES += -I /opt/homebrew/include
-    LD_FLAGS += -l SDL2 -L /opt/homebrew/opt/sdl2/lib
-endif
-
 
 OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
-
 
 .PHONY: all
 all: $(BUILD_DIR)/$(TARGET)
@@ -51,4 +42,4 @@ $(BUILD_DIR):
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)/*

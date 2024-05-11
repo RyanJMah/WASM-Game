@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-THIS_DIR=$(cd $(dirname $0); pwd)
+REPO_DIR=$(cd $(dirname $0); pwd)/..
 
-cd $THIS_DIR
+
+cd $REPO_DIR
 git submodule update --init --recursive
 
 
-cd $THIS_DIR/emsdk
+cd $REPO_DIR/emsdk
 
 ./emsdk install latest
 ./emsdk activate latest
 
 source ./emsdk_env.sh
 
-cd $THIS_DIR
+cd $REPO_DIR
