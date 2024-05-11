@@ -50,7 +50,7 @@ Note:
 
 ### WASM
 
-Run a script to serve the html, then go to [localhost:8888].
+Run a script to serve the html, then go to [localhost:8888](localhost:8888).
 
 ```bash
 ./serve_wasm.sh
