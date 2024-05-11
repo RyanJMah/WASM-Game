@@ -1,3 +1,9 @@
+# OS_TYPE = macos
+ifndef OS_TYPE
+    OS_TYPE = macos
+    $(warning OS is not set. Defaulting to "macos")
+endif
+
 ifeq ($(TARGET_PLATFORM), native)
     include makefiles/native.mk
 else ifeq ($(TARGET_PLATFORM), wasm)
@@ -15,6 +21,14 @@ C_FLAGS += $(C_INCLUDES) $(OPT) -Wall -MMD -MP -MF"$(@:%.o=%.d)"
 
 ifeq ($(DEBUG), 1)
 	C_FLAGS += -g
+endif
+
+ifeq ($(OS_TYPE), linux)
+    C_INCLUDES += -I /usr/include/SDL2
+    LD_FLAGS += -l SDL2
+else
+    C_INCLUDES += -I /opt/homebrew/include
+    LD_FLAGS += -l SDL2 -L /opt/homebrew/opt/sdl2/lib
 endif
 
 

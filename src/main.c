@@ -1,20 +1,33 @@
 #include <SDL2/SDL.h>
+
+#ifdef WASM
 #include <emscripten.h>
+#endif
 
-SDL_Window* window;   // Declare a window
-SDL_Renderer* renderer;  // Declare a renderer
+static SDL_Window* window;   // Declare a window
+static SDL_Renderer* renderer;  // Declare a renderer
 
-void main_loop() {
+#ifndef WASM
+static uint32_t g_quit = 0;
+#endif
+
+void main_loop()
+{
     SDL_Event e;
 
-    while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
+    while (SDL_PollEvent(&e))
+    {
+        if (e.type == SDL_QUIT)
+        {
+        #ifdef WASM
             emscripten_cancel_main_loop();
+        #else
+            g_quit = 1;
+        #endif
+
             break;
         }
     }
-
-    // Render and other operations
 
     // Set the draw color to white
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
@@ -54,9 +67,13 @@ int main(int argc, char* argv[])
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
 #else
-    while (1) {
+    while ( !g_quit ) {
         main_loop();
     }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 #endif
 
     return 0;

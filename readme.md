@@ -38,6 +38,12 @@ export TARGET_PLATFORM=native
 # To build for browser
 export TARGET_PLATFORM=wasm
 
+# For MacOS
+export OS_TYPE=macos
+
+# For Linux
+export OS_TYPE=linux
+
 make
 ```
 
