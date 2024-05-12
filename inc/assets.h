@@ -32,7 +32,7 @@ typedef union
         SDL_Texture* p_right4;
     } named;
 
-    SDL_Texture* textures[16];
+    SDL_Texture* texture_arr[16];
 } CharAssets_t;
 
 err_code_t CharAssets_Load( SDL_Renderer* p_renderer,

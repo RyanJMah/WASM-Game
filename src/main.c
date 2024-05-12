@@ -28,12 +28,8 @@ static inline void _initial_game_state(void)
 {
     g_state.curr_scale = 1;
 
-    g_state.character.x = 0;
-    g_state.character.y = 0;
+    Character_Init(&g_state.character);
 
-    g_state.character.orientation = CHAR_FACING_DOWN;
-
-    g_state.character.velocity  = 5;
     g_state.character.p_texture = g_state.char_assets.named.p_down1;
 }
 
@@ -172,8 +168,8 @@ exit:
     SDL_DestroyRenderer(g_state.p_renderer);
     SDL_DestroyWindow(g_state.p_window);
 
-    free_textures( g_state.char_assets.textures,
-                   ARRAY_LEN(g_state.char_assets.textures) );
+    free_textures( g_state.char_assets.texture_arr,
+                   ARRAY_LEN(g_state.char_assets.texture_arr) );
 
     printf( "Error: %s\n", SDL_GetError() );
     SDL_Quit();

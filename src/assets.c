@@ -43,9 +43,9 @@ err_code_t CharAssets_Load( SDL_Renderer* p_renderer,
 
 
     // Check if any of the textures failed to load
-    for (uint32_t i = 0; i < ARRAY_LEN(out_assets->textures); i++)
+    for (uint32_t i = 0; i < ARRAY_LEN(out_assets->texture_arr); i++)
     {
-        require_action( out_assets->textures[i] != NULL,
+        require_action( out_assets->texture_arr[i] != NULL,
                         exit,
                         err_code = ERR_ALLOC );
     }
