@@ -145,6 +145,7 @@ int main(int argc, char* argv[])
     }
 #endif
 
+
 exit:
     SDL_DestroyRenderer(g_game_state.p_renderer);
     SDL_DestroyWindow(g_game_state.p_window);
