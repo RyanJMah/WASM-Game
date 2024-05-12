@@ -59,69 +59,126 @@ void main_loop(void)
     const uint8_t* key_state = SDL_GetKeyboardState(NULL);
     bool key_pressed = false;
 
-    // Up
-    if ( key_state[SDL_SCANCODE_W] )
-    {
-        if ( g_state.character.orientation != CHAR_FACING_UP )
-        {
-            g_state.character.orientation = CHAR_FACING_UP;
-            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
-        }
-        else
-        {
-            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-        }
-
-        g_state.character.y -= g_state.character.velocity;
-        key_pressed = true;
-    }
-
-    // Down
-    if ( key_state[SDL_SCANCODE_S] )
-    {
-        if ( g_state.character.orientation != CHAR_FACING_DOWN )
-        {
-            g_state.character.orientation = CHAR_FACING_DOWN;
-            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
-        }
-        else
-        {
-            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-        }
-
-        g_state.character.y += g_state.character.velocity;
-        key_pressed = true;
-    }
-
-    // Left
-    if ( key_state[SDL_SCANCODE_A] )
-    {
-        if ( g_state.character.orientation != CHAR_FACING_LEFT )
-        {
-            g_state.character.orientation = CHAR_FACING_LEFT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
-        }
-        else
-        {
-            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-        }
-
-        g_state.character.x -= g_state.character.velocity;
-        key_pressed = true;
-    }
-
-    // Right
-    if ( key_state[SDL_SCANCODE_D] )
+    // Diagonal up+right
+    if ( key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_D] )
     {
         if ( g_state.character.orientation != CHAR_FACING_RIGHT )
         {
             g_state.character.orientation = CHAR_FACING_RIGHT;
             g_state.character.p_texture   = g_state.char_assets.named.p_right1;
         }
-        else
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.x += g_state.character.velocity;
+        g_state.character.y -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Diagonal up+left
+    else if ( key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_LEFT )
         {
-            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+            g_state.character.orientation = CHAR_FACING_LEFT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
         }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.x -= g_state.character.velocity;
+        g_state.character.y -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Diagonal down+right
+    else if ( key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_RIGHT )
+        {
+            g_state.character.orientation = CHAR_FACING_RIGHT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.x += g_state.character.velocity;
+        g_state.character.y += g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Diagonal down+left
+    else if ( key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_A] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_LEFT )
+        {
+            g_state.character.orientation = CHAR_FACING_LEFT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.x -= g_state.character.velocity;
+        g_state.character.y += g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Up
+    else if ( key_state[SDL_SCANCODE_W] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_UP )
+        {
+            g_state.character.orientation = CHAR_FACING_UP;
+            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.y -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Down
+    else if ( key_state[SDL_SCANCODE_S] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_DOWN )
+        {
+            g_state.character.orientation = CHAR_FACING_DOWN;
+            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.y += g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Left
+    else if ( key_state[SDL_SCANCODE_A] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_LEFT )
+        {
+            g_state.character.orientation = CHAR_FACING_LEFT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
+
+        g_state.character.x -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Right
+    else if ( key_state[SDL_SCANCODE_D] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_RIGHT )
+        {
+            g_state.character.orientation = CHAR_FACING_RIGHT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+
+        }
+
+        Character_CycleTexture(&g_state.character, &g_state.char_assets);
 
         g_state.character.x += g_state.character.velocity;
         key_pressed = true;
