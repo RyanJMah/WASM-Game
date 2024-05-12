@@ -7,9 +7,9 @@
 #include <emscripten.h>
 #endif
 
-static SDL_Window*   window;
-static SDL_Renderer* renderer;
-static SDL_Texture*  texture;
+static SDL_Window*   gp_window;
+static SDL_Renderer* gp_renderer;
+static SDL_Texture*  gp_texture;
 
 #ifndef WASM
     #define FRAME_RATE          ( 60 )
@@ -43,16 +43,16 @@ void main_loop(void)
 
 
     // Set the draw color to white
-    err_code = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    err_code = SDL_SetRenderDrawColor(gp_renderer, 0, 0, 0, 255);
     check_noerr(err_code);
 
     // Clear the entire screen to our selected color
-    err_code = SDL_RenderClear(renderer);
+    err_code = SDL_RenderClear(gp_renderer);
     check_noerr(err_code);
 
     int texWidth, texHeight;
 
-    err_code = SDL_QueryTexture(texture, NULL, NULL, &texWidth, &texHeight);  // Get the width and height of the texture
+    err_code = SDL_QueryTexture(gp_texture, NULL, NULL, &texWidth, &texHeight);  // Get the width and height of the gp_texture
     check_noerr(err_code);
 
     texHeight *= 2;
@@ -64,12 +64,12 @@ void main_loop(void)
     dstRect.w = texWidth;  // Use the original image width
     dstRect.h = texHeight;  // Use the original image height
 
-    err_code = SDL_RenderCopy(renderer, texture, NULL, &dstRect);  // Draw the image
+    err_code = SDL_RenderCopy(gp_renderer, gp_texture, NULL, &dstRect);  // Draw the image
     check_noerr(err_code);
 
     // Up until now everything was drawn behind the scenes.
-    // This will show the new, white contents of the window.
-    SDL_RenderPresent(renderer);
+    // This will show the new, white contents of the gp_window.
+    SDL_RenderPresent(gp_renderer);
 }
 
 int main(int argc, char* argv[])
@@ -83,20 +83,20 @@ int main(int argc, char* argv[])
     err_code = IMG_Init(IMG_INIT_PNG);
     require(err_code & IMG_INIT_PNG, err_handler);
 
-    // Create an application window with the following settings:
-    window = SDL_CreateWindow( "Hello World",           // window title
+    // Create an application gp_window with the following settings:
+    gp_window = SDL_CreateWindow( "Hello World",           // gp_window title
                                SDL_WINDOWPOS_UNDEFINED, // initial x position
                                SDL_WINDOWPOS_UNDEFINED, // initial y position
                                640,                     // width, in pixels
                                480,                     // height, in pixels
                                0 );                     // flags
-    require( window != NULL, err_handler );
+    require( gp_window != NULL, err_handler );
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    require( renderer != NULL, err_handler );
+    gp_renderer = SDL_CreateRenderer(gp_window, -1, SDL_RENDERER_ACCELERATED);
+    require( gp_renderer != NULL, err_handler );
 
-    texture = IMG_LoadTexture( renderer, STR_CONCAT(ASSETS_PATH, "ACharDown.png") );
-    require( texture != NULL, err_handler );
+    gp_texture = IMG_LoadTexture( gp_renderer, PATH_CONCAT3(ASSETS_PATH, "character", "down1.png") );
+    require( gp_texture != NULL, err_handler );
 
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
@@ -115,15 +115,16 @@ int main(int argc, char* argv[])
         }
     }
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+
 #endif
 
-    return 0;
+exit:
+    SDL_DestroyRenderer(gp_renderer);
+    SDL_DestroyWindow(gp_window);
+    SDL_DestroyTexture(gp_texture);
 
-err_handler:
     printf( "Error: %s\n", SDL_GetError() );
     SDL_Quit();
-    return 1;
+
+    return 0;
 }

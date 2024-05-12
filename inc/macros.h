@@ -8,12 +8,20 @@
 #define STR_IMPL_(x) #x      // stringify argument
 #define STR(x) STR_IMPL_(x)  // indirection to expand argument macros
 
-#define STR_CONCAT(a, b)    a b
+
+// a/b
+#define PATH_CONCAT2(a, b)              a "/" b
+#define PATH_CONCAT3(a, b, c)           a "/" b "/" c
+#define PATH_CONCAT4(a, b, c, d)        a "/" b "/" c "/" d
+#define PATH_CONCAT5(a, b, c, d, e)     a "/" b "/" c "/" d "/" e
+
+#define ARRAY_LEN(arr)  ( sizeof(arr) / sizeof(arr[0]) )
+
 
 #ifdef WASM
-    #define ASSETS_PATH     "/assets/"
+    #define ASSETS_PATH     "/assets"
 #else
-    #define ASSETS_PATH     "./assets/"
+    #define ASSETS_PATH     "./assets"
 #endif
 
 // -------------------------------------------
@@ -35,6 +43,11 @@
 // -------------------------------------------
 
 // Assert macros from: https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/AssertMacros.h
+
+// Suppress warning for goto skips variable initialization
+#ifdef __INTELLISENSE__
+    #pragma diag_suppress 546
+#endif
 
 #define check_noerr(err_code)                                                       \
     do                                                                              \
