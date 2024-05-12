@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 
     // Initialize SDL_image with PNG support
     err_code = IMG_Init(IMG_INIT_PNG);
-    require(err_code & IMG_INIT_PNG, err_handler);
+    require(err_code & IMG_INIT_PNG, exit);
 
     // Create an application gp_window with the following settings:
     gp_window = SDL_CreateWindow( "Hello World",           // gp_window title
@@ -90,13 +90,13 @@ int main(int argc, char* argv[])
                                640,                     // width, in pixels
                                480,                     // height, in pixels
                                0 );                     // flags
-    require( gp_window != NULL, err_handler );
+    require( gp_window != NULL, exit );
 
     gp_renderer = SDL_CreateRenderer(gp_window, -1, SDL_RENDERER_ACCELERATED);
-    require( gp_renderer != NULL, err_handler );
+    require( gp_renderer != NULL, exit );
 
     gp_texture = IMG_LoadTexture( gp_renderer, PATH_CONCAT3(ASSETS_PATH, "character", "down1.png") );
-    require( gp_texture != NULL, err_handler );
+    require( gp_texture != NULL, exit );
 
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
