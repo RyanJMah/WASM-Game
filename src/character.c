@@ -2,6 +2,34 @@
 #include "constants.h"
 #include "character.h"
 
+static inline SDL_Texture** _get_base_texture(Character_t* character, CharAssets_t* assets)
+{
+    switch (character->orientation)
+    {
+        case CHAR_FACING_UP:
+        {
+            return &assets->named.p_up1;
+        }
+
+        default:
+        case CHAR_FACING_DOWN:
+        {
+            return &assets->named.p_down1;
+        }
+
+        case CHAR_FACING_LEFT:
+        {
+            return &assets->named.p_left1;
+        }
+
+        case CHAR_FACING_RIGHT:
+        {
+            return &assets->named.p_right1;
+        }
+    }
+}
+
+
 void Character_Init(Character_t* character)
 {
     character->x = 0;
@@ -28,38 +56,10 @@ void Character_CycleTexture(Character_t* character, CharAssets_t* assets)
 
     character->texture_swap_counter = 0;
 
-    SDL_Texture** p_texture1 = NULL;
-
-    switch (character->orientation)
-    {
-        case CHAR_FACING_UP:
-        {
-            p_texture1 = &assets->named.p_up1;
-            break;
-        }
-
-        default:
-        case CHAR_FACING_DOWN:
-        {
-            p_texture1 = &assets->named.p_down1;
-            break;
-        }
-
-        case CHAR_FACING_LEFT:
-        {
-            p_texture1 = &assets->named.p_left1;
-            break;
-        }
-
-        case CHAR_FACING_RIGHT:
-        {
-            p_texture1 = &assets->named.p_right1;
-            break;
-        }
-    }
+    SDL_Texture** p_base_texture = _get_base_texture(character, assets);
 
     // Get the current index of the texture in the assets array
-    int32_t curr_index_in_assets_arr = p_texture1 - &assets->texture_arr[0];
+    int32_t curr_index_in_assets_arr = p_base_texture - &assets->texture_arr[0];
 
     // Calculate the desired index by adding the current texture index
     uint32_t desired_index = curr_index_in_assets_arr + character->curr_texture_index;
@@ -82,33 +82,7 @@ void Character_CycleTexture(Character_t* character, CharAssets_t* assets)
 
 void Character_SetIdleTexture(Character_t* character, CharAssets_t* assets)
 {
-    switch (character->orientation)
-    {
-        case CHAR_FACING_UP:
-        {
-            character->p_texture = &assets->named.p_up1;
-            break;
-        }
-
-        default:
-        case CHAR_FACING_DOWN:
-        {
-            character->p_texture = &assets->named.p_down1;
-            break;
-        }
-
-        case CHAR_FACING_LEFT:
-        {
-            character->p_texture = &assets->named.p_left1;
-            break;
-        }
-
-        case CHAR_FACING_RIGHT:
-        {
-            character->p_texture = &assets->named.p_right1;
-            break;
-        }
-    }
+    character->p_texture = _get_base_texture(character, assets);
 }
 
 int render_character(Character_t* character, SDL_Renderer* p_renderer)
