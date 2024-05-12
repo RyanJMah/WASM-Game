@@ -28,13 +28,13 @@ static inline void _initial_game_state(void)
 {
     g_state.curr_scale = 1;
 
-    g_state.char_info.x = 0;
-    g_state.char_info.y = 0;
+    g_state.character.x = 0;
+    g_state.character.y = 0;
 
-    g_state.char_info.orientation = CHAR_FACING_DOWN;
+    g_state.character.orientation = CHAR_FACING_DOWN;
 
-    g_state.char_info.velocity  = 5;
-    g_state.char_info.p_texture = g_state.char_assets.named.p_down1;
+    g_state.character.velocity  = 5;
+    g_state.character.p_texture = g_state.char_assets.named.p_down1;
 }
 
 void main_loop(void)
@@ -63,29 +63,29 @@ void main_loop(void)
                 {
                     case SDLK_w:    // Up
                     {
-                        g_state.char_info.p_texture = g_state.char_assets.named.p_up1;
-                        g_state.char_info.y        -= g_state.char_info.velocity;
+                        g_state.character.p_texture = g_state.char_assets.named.p_up1;
+                        g_state.character.y        -= g_state.character.velocity;
                         break;
                     }
 
-                    case SDLK_s:
+                    case SDLK_s:    // Down
                     {
-                        g_state.char_info.p_texture = g_state.char_assets.named.p_down1;
-                        g_state.char_info.y        += g_state.char_info.velocity;
+                        g_state.character.p_texture = g_state.char_assets.named.p_down1;
+                        g_state.character.y        += g_state.character.velocity;
                         break;
                     }
 
-                    case SDLK_a:
+                    case SDLK_a:    // Left
                     {
-                        g_state.char_info.p_texture = g_state.char_assets.named.p_left1;
-                        g_state.char_info.x        -= g_state.char_info.velocity;
+                        g_state.character.p_texture = g_state.char_assets.named.p_left1;
+                        g_state.character.x        -= g_state.character.velocity;
                         break;
                     }
 
-                    case SDLK_d:
+                    case SDLK_d:    // Right
                     {
-                        g_state.char_info.p_texture = g_state.char_assets.named.p_right1;
-                        g_state.char_info.x        += g_state.char_info.velocity;
+                        g_state.character.p_texture = g_state.char_assets.named.p_right1;
+                        g_state.character.x        += g_state.character.velocity;
                         break;
                     }
 
@@ -95,7 +95,7 @@ void main_loop(void)
         }
     }
 
-    err_code = render_character( &g_state.char_info, g_state.p_renderer );
+    err_code = render_character( &g_state.character, g_state.p_renderer );
     require_noerr(err_code, exit);
 
     // Up until now everything was drawn behind the scenes.

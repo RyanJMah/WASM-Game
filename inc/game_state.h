@@ -16,5 +16,5 @@ typedef struct
 
     uint32_t curr_scale;
 
-    Character_t char_info;
+    Character_t character;
 } GameState_t;
