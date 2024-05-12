@@ -10,12 +10,6 @@
 #include <emscripten.h>
 #endif
 
-static GameState_t g_game_state =
-{
-    .window_h = 480,
-    .window_w = 640,
-};
-
 #ifndef WASM
     #define FRAME_RATE          ( 60 )
     #define FRAME_TIME_TICKS    ( 1000 / FRAME_RATE )
@@ -23,11 +17,59 @@ static GameState_t g_game_state =
     static uint32_t g_quit = 0;
 #endif
 
-void main_loop(void)
+static GameState_t g_game_state =
+{
+    .window_h = 480,
+    .window_w = 640,
+};
+
+
+static inline void _initial_game_state(void)
+{
+    g_game_state.curr_scale = 1;
+
+    g_game_state.char_x = 0;
+    g_game_state.char_y = 0;
+
+    g_game_state.char_velocity = 1;
+
+    g_game_state.p_char_texture = g_game_state.char_assets.named.p_down1;
+}
+
+static inline int _render_character( SDL_Texture* p_char_texture,
+                                     uint32_t x, uint32_t y )
 {
     int err_code = 0;
 
-    SDL_Texture* p_texture = g_game_state.char_assets.named.p_down1;
+    int texWidth, texHeight;
+
+    // Get the width and height of the texture
+    err_code = SDL_QueryTexture(p_char_texture, NULL, NULL, &texWidth, &texHeight);
+    require_noerr(err_code, exit);
+
+    texHeight *= 2;
+    texWidth  *= 2;
+
+    SDL_Rect dstRect;
+    dstRect.x = x;
+    dstRect.y = y;
+    dstRect.w = texWidth;
+    dstRect.h = texHeight;
+
+    err_code = SDL_RenderCopy( g_game_state.p_renderer,
+                               p_char_texture,
+                               NULL,
+                               &dstRect );  // Draw the image
+    require_noerr(err_code, exit);
+
+exit:
+    return err_code;
+}
+
+
+void main_loop(void)
+{
+    int err_code = 0;
 
     SDL_Event e;
     if ( SDL_PollEvent(&e) )
@@ -45,38 +87,44 @@ void main_loop(void)
                 break;
             }
 
-            // case SDL_KEYDOWN:
-            // {
-            //     switch (e.key.keysym.sym)
-            //     {
-            //         // wasd
-            //         case SDLK_w:
-            //         {
+            case SDL_KEYDOWN:
+            {
+                switch (e.key.keysym.sym)
+                {
+                    // wasd
+                    case SDLK_w:
+                    {
+                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_up1;
+                        break;
+                    }
 
-            //         }
-            //     }
+                    case SDLK_s:
+                    {
+                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_down1;
+                        break;
+                    }
 
-            //     break;
-            // }
+                    case SDLK_a:
+                    {
+                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_left1;
+                        break;
+                    }
+
+                    case SDLK_d:
+                    {
+                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_right1;
+                        break;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 
-    int texWidth, texHeight;
-
-    // Get the width and height of the texture
-    err_code = SDL_QueryTexture(p_texture, NULL, NULL, &texWidth, &texHeight);
-    require_noerr(err_code, exit);
-
-    texHeight *= 2;
-    texWidth  *= 2;
-
-    SDL_Rect dstRect;
-    dstRect.x = (g_game_state.window_w - texWidth) / 2;     // Center the image horizontally
-    dstRect.y = (g_game_state.window_h - texHeight) / 2;    // Center the image vertically
-    dstRect.w = texWidth;                                   // Use the original image width
-    dstRect.h = texHeight;                                  // Use the original image height
-
-    err_code = SDL_RenderCopy(g_game_state.p_renderer, p_texture, NULL, &dstRect);  // Draw the image
+    err_code = _render_character( g_game_state.p_char_texture,
+                                  g_game_state.char_x,
+                                  g_game_state.char_y );
     require_noerr(err_code, exit);
 
     // Up until now everything was drawn behind the scenes.
@@ -127,6 +175,8 @@ int main(int argc, char* argv[])
     err_code = CharAssets_Load(g_game_state.p_renderer, &g_game_state.char_assets);
     require_noerr(err_code, exit);
 
+    // Set the initial game state
+    _initial_game_state();
 
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
