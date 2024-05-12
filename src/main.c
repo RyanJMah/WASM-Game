@@ -88,8 +88,6 @@ exit:
     {
         printf( "Error: %s\n", SDL_GetError() );
     }
-
-    return;
 }
 
 
