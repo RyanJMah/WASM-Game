@@ -21,8 +21,8 @@ typedef struct
 
     CharOrientation_t orientation;
 
-    SDL_Texture* p_texture;
-    uint32_t     curr_texture_index;
+    SDL_Texture** p_texture;
+    uint32_t      curr_texture_index;
 
     uint32_t texture_swap_counter;
     uint32_t texture_swap_rate;

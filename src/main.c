@@ -32,7 +32,7 @@ static inline void _initial_game_state(void)
 
     Character_Init(&g_state.character);
 
-    g_state.character.p_texture = g_state.char_assets.named.p_down1;
+    g_state.character.p_texture = &g_state.char_assets.named.p_down1;
 }
 
 static inline void _handle_user_input(void)
@@ -46,7 +46,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_RIGHT )
         {
             g_state.character.orientation = CHAR_FACING_RIGHT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_right1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -62,7 +62,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_LEFT )
         {
             g_state.character.orientation = CHAR_FACING_LEFT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_left1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -78,7 +78,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_RIGHT )
         {
             g_state.character.orientation = CHAR_FACING_RIGHT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_right1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -94,7 +94,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_LEFT )
         {
             g_state.character.orientation = CHAR_FACING_LEFT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_left1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -110,7 +110,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_UP )
         {
             g_state.character.orientation = CHAR_FACING_UP;
-            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_up1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -125,7 +125,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_DOWN )
         {
             g_state.character.orientation = CHAR_FACING_DOWN;
-            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_down1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -140,7 +140,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_LEFT )
         {
             g_state.character.orientation = CHAR_FACING_LEFT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_left1;
         }
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
@@ -155,7 +155,7 @@ static inline void _handle_user_input(void)
         if ( g_state.character.orientation != CHAR_FACING_RIGHT )
         {
             g_state.character.orientation = CHAR_FACING_RIGHT;
-            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+            g_state.character.p_texture   = &g_state.char_assets.named.p_right1;
 
         }
 
