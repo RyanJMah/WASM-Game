@@ -12,8 +12,8 @@ void Character_Init(Character_t* character)
     character->p_texture = NULL;
     character->curr_texture_index = 0;
 
-    // Initialize to the same value, so the walking animation starts immediately
-    character->texture_swap_rate    = 5;
+    // Initialize to same val minus one, so the walking animation starts immediately
+    character->texture_swap_rate    = CHARACTER_TEXTURE_SWAP_RATE;
     character->texture_swap_counter = character->texture_swap_rate - 1;
 }
 

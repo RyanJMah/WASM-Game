@@ -7,4 +7,4 @@
 #define WINDOW_HEIGHT                   ( 600 )
 
 #define CHARACTER_VELOCITY              ( 1.5L )
-#define CHARACTER_TEXTURE_SWAP_RATE     ( 5 )
+#define CHARACTER_TEXTURE_SWAP_RATE     ( 10 )
