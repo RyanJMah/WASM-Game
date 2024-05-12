@@ -33,12 +33,22 @@ all: $(BUILD_DIR)/$(TARGET)
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 	$(CC) -c $(C_FLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET): $(OBJECTS)
+$(BUILD_DIR)/$(TARGET): $(OBJECTS) assets
 	$(CC) $(OBJECTS) $(LD_FLAGS) -o $@
 	$(call post_build, $(BUILD_DIR))
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+
+.PHONY: assets
+assets: $(BUILD_DIR)
+ifndef RELEASE
+	@cd $(BUILD_DIR) && ln -sf ../assets .
+else
+	@echo "Copying assets to build directory..."
+	@cp -r assets $(BUILD_DIR)
+endif
+
 
 .PHONY: clean
 clean:

@@ -11,8 +11,8 @@ endef
 
 ifeq ($(OS_TYPE), linux)
     C_INCLUDES += -I /usr/include/SDL2
-    LD_FLAGS += -l SDL2
+    LD_FLAGS += -l SDL2 -l SDL2_image
 else
     C_INCLUDES += -I /opt/homebrew/include
-    LD_FLAGS += -l SDL2 -L /opt/homebrew/opt/sdl2/lib
+    LD_FLAGS += -l SDL2 -L /opt/homebrew/opt/sdl2/lib -l SDL2_image -L /opt/homebrew/opt/sdl2_image/lib
 endif

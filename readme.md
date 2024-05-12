@@ -9,6 +9,7 @@ Can run both natively, and on the browser.
 
 * `python3`
 * `sdl2`
+* `sdl2_image`
 * `wabt`
 * `entr`
 
@@ -22,14 +23,14 @@ pip3 install -r requirements.txt
 
 ### MacOS
 
-```bash
-brew install sdl2 wabt entr
+```shell
+brew install sdl2 sdl2_image wabt entr
 ```
 
 ### Debian Linux
 
 ```bash
-sudo apt install libsdl2-dev wabt entr
+sudo apt install libsdl2-dev libsdl2-dev libsdl2-image-dev wabt entr
 ```
 
 ## Build

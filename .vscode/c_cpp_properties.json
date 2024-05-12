@@ -7,7 +7,10 @@
                 "/opt/homebrew/include",
                 "${workspaceFolder}/emsdk/upstream/emscripten/system/include"
             ],
-            "defines": [],
+            "defines": [
+                "WASM",
+                "DEBUG"
+            ],
             "compilerPath": "/usr/bin/gcc",
             "intelliSenseMode": "${default}",
             "macFrameworkPath": [
