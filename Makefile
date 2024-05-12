@@ -43,10 +43,10 @@ $(BUILD_DIR):
 .PHONY: assets
 assets: $(BUILD_DIR)
 ifndef RELEASE
-	@cd $(BUILD_DIR) && ln -sf ../assets .
+	cd $(BUILD_DIR) && ln -sf ../assets .
 else
 	@echo "Copying assets to build directory..."
-	@cp -r assets $(BUILD_DIR)
+	cp -r assets $(BUILD_DIR)
 endif
 
 

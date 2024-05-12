@@ -74,11 +74,14 @@ void main_loop(void)
 
 int main(int argc, char* argv[])
 {
+    int err_code = 0;
+
     // Initialize SDL2
     SDL_Init(SDL_INIT_VIDEO);
 
     // Initialize SDL_image with PNG support
-    IMG_Init(IMG_INIT_PNG);
+    err_code = IMG_Init(IMG_INIT_PNG);
+    require(err_code & IMG_INIT_PNG, err_handler);
 
     // Create an application window with the following settings:
     window = SDL_CreateWindow( "Hello World",           // window title
@@ -92,7 +95,7 @@ int main(int argc, char* argv[])
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     require( renderer != NULL, err_handler );
 
-    texture = IMG_LoadTexture(renderer, "assets/ACharDown.png");
+    texture = IMG_LoadTexture( renderer, STR_CONCAT(ASSETS_PATH, "ACharDown.png") );
     require( texture != NULL, err_handler );
 
 #ifdef WASM
