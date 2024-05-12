@@ -5,15 +5,28 @@ void Character_Init(Character_t* character)
 {
     character->x = 0;
     character->y = 0;
-    character->velocity = 5;
+    character->velocity = 1;
     character->orientation = CHAR_FACING_DOWN;
 
     character->p_texture = NULL;
     character->curr_texture_index = 0;
+
+    // Initialize to the same value, so the walking animation starts immediately
+    character->texture_swap_rate    = 5;
+    character->texture_swap_counter = character->texture_swap_rate - 1;
 }
 
 void Character_CycleTexture(Character_t* character, CharAssets_t* assets)
 {
+    character->texture_swap_counter++;
+
+    if (character->texture_swap_counter < character->texture_swap_rate)
+    {
+        return;
+    }
+
+    character->texture_swap_counter = 0;
+
     SDL_Texture* p_texture1 = NULL;
 
     switch (character->orientation)

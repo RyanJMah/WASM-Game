@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -52,81 +53,90 @@ void main_loop(void)
 
                 break;
             }
-
-            case SDL_KEYDOWN:
-            {
-                switch (e.key.keysym.sym)
-                {
-                    case SDLK_w:    // Up
-                    {
-                        if ( g_state.character.orientation != CHAR_FACING_UP )
-                        {
-                            g_state.character.orientation = CHAR_FACING_UP;
-                            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
-                        }
-                        else
-                        {
-                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-                        }
-
-                        g_state.character.y        -= g_state.character.velocity;
-                        break;
-                    }
-
-                    case SDLK_s:    // Down
-                    {
-                        if ( g_state.character.orientation != CHAR_FACING_DOWN )
-                        {
-                            g_state.character.orientation = CHAR_FACING_DOWN;
-                            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
-                        }
-                        else
-                        {
-                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-                        }
-
-                        g_state.character.y        += g_state.character.velocity;
-                        break;
-                    }
-
-                    case SDLK_a:    // Left
-                    {
-                        if ( g_state.character.orientation != CHAR_FACING_LEFT )
-                        {
-                            g_state.character.orientation = CHAR_FACING_LEFT;
-                            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
-                        }
-                        else
-                        {
-                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-                        }
-
-                        g_state.character.x        -= g_state.character.velocity;
-                        break;
-                    }
-
-                    case SDLK_d:    // Right
-                    {
-                        if ( g_state.character.orientation != CHAR_FACING_RIGHT )
-                        {
-                            g_state.character.orientation = CHAR_FACING_RIGHT;
-                            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
-                        }
-                        else
-                        {
-                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
-                        }
-
-                        g_state.character.x        += g_state.character.velocity;
-                        break;
-                    }
-
-                    break;
-                }
-            }
         }
     }
 
+    const uint8_t* key_state = SDL_GetKeyboardState(NULL);
+    bool key_pressed = false;
+
+    // Up
+    if ( key_state[SDL_SCANCODE_W] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_UP )
+        {
+            g_state.character.orientation = CHAR_FACING_UP;
+            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
+        }
+        else
+        {
+            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+        }
+
+        g_state.character.y -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Down
+    if ( key_state[SDL_SCANCODE_S] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_DOWN )
+        {
+            g_state.character.orientation = CHAR_FACING_DOWN;
+            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
+        }
+        else
+        {
+            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+        }
+
+        g_state.character.y += g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Left
+    if ( key_state[SDL_SCANCODE_A] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_LEFT )
+        {
+            g_state.character.orientation = CHAR_FACING_LEFT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+        }
+        else
+        {
+            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+        }
+
+        g_state.character.x -= g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    // Right
+    if ( key_state[SDL_SCANCODE_D] )
+    {
+        if ( g_state.character.orientation != CHAR_FACING_RIGHT )
+        {
+            g_state.character.orientation = CHAR_FACING_RIGHT;
+            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+        }
+        else
+        {
+            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+        }
+
+        g_state.character.x += g_state.character.velocity;
+        key_pressed = true;
+    }
+
+    if ( !key_pressed )
+    {
+        Character_SetIdleTexture(&g_state.character, &g_state.char_assets);
+    }
+
+    // Clear the entire screen to our selected color
+    err_code = SDL_RenderClear(g_state.p_renderer);
+    require_noerr(err_code, exit);
+
+    // Render the character
     err_code = render_character( &g_state.character, g_state.p_renderer );
     require_noerr(err_code, exit);
 
@@ -168,10 +178,6 @@ int main(int argc, char* argv[])
 
     // Set the draw color to black
     err_code = SDL_SetRenderDrawColor(g_state.p_renderer, 0, 0, 0, 255);
-    require_noerr(err_code, exit);
-
-    // Clear the entire screen to our selected color
-    err_code = SDL_RenderClear(g_state.p_renderer);
     require_noerr(err_code, exit);
 
     // Load assets

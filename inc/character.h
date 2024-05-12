@@ -23,6 +23,9 @@ typedef struct
 
     SDL_Texture* p_texture;
     uint32_t     curr_texture_index;
+
+    uint32_t texture_swap_counter;
+    uint32_t texture_swap_rate;
 } Character_t;
 
 void Character_Init(Character_t* character);
