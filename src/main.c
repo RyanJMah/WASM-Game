@@ -96,7 +96,8 @@ int main(int argc, char* argv[])
     int err_code = 0;
 
     // Initialize SDL2
-    SDL_Init(SDL_INIT_VIDEO);
+    err_code = SDL_Init(SDL_INIT_VIDEO);
+    require_noerr(err_code, exit);
 
     // Initialize SDL_image with PNG support
     err_code = IMG_Init(IMG_INIT_PNG);
