@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include "assets.h"
+#include "character.h"
 
 typedef struct
 {
@@ -15,10 +16,5 @@ typedef struct
 
     uint32_t curr_scale;
 
-    uint32_t char_x;
-    uint32_t char_y;
-
-    uint32_t char_velocity;
-    SDL_Texture* p_char_texture;
-    
+    Character_t char_info;
 } GameState_t;

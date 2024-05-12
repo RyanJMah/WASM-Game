@@ -17,7 +17,7 @@
     static uint32_t g_quit = 0;
 #endif
 
-static GameState_t g_game_state =
+static GameState_t g_state =
 {
     .window_h = 480,
     .window_w = 640,
@@ -26,46 +26,16 @@ static GameState_t g_game_state =
 
 static inline void _initial_game_state(void)
 {
-    g_game_state.curr_scale = 1;
+    g_state.curr_scale = 1;
 
-    g_game_state.char_x = 0;
-    g_game_state.char_y = 0;
+    g_state.char_info.x = 0;
+    g_state.char_info.y = 0;
 
-    g_game_state.char_velocity = 1;
+    g_state.char_info.orientation = CHAR_FACING_DOWN;
 
-    g_game_state.p_char_texture = g_game_state.char_assets.named.p_down1;
+    g_state.char_info.velocity  = 5;
+    g_state.char_info.p_texture = g_state.char_assets.named.p_down1;
 }
-
-static inline int _render_character( SDL_Texture* p_char_texture,
-                                     uint32_t x, uint32_t y )
-{
-    int err_code = 0;
-
-    int texWidth, texHeight;
-
-    // Get the width and height of the texture
-    err_code = SDL_QueryTexture(p_char_texture, NULL, NULL, &texWidth, &texHeight);
-    require_noerr(err_code, exit);
-
-    texHeight *= 2;
-    texWidth  *= 2;
-
-    SDL_Rect dstRect;
-    dstRect.x = x;
-    dstRect.y = y;
-    dstRect.w = texWidth;
-    dstRect.h = texHeight;
-
-    err_code = SDL_RenderCopy( g_game_state.p_renderer,
-                               p_char_texture,
-                               NULL,
-                               &dstRect );  // Draw the image
-    require_noerr(err_code, exit);
-
-exit:
-    return err_code;
-}
-
 
 void main_loop(void)
 {
@@ -91,28 +61,31 @@ void main_loop(void)
             {
                 switch (e.key.keysym.sym)
                 {
-                    // wasd
-                    case SDLK_w:
+                    case SDLK_w:    // Up
                     {
-                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_up1;
+                        g_state.char_info.p_texture = g_state.char_assets.named.p_up1;
+                        g_state.char_info.y        -= g_state.char_info.velocity;
                         break;
                     }
 
                     case SDLK_s:
                     {
-                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_down1;
+                        g_state.char_info.p_texture = g_state.char_assets.named.p_down1;
+                        g_state.char_info.y        += g_state.char_info.velocity;
                         break;
                     }
 
                     case SDLK_a:
                     {
-                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_left1;
+                        g_state.char_info.p_texture = g_state.char_assets.named.p_left1;
+                        g_state.char_info.x        -= g_state.char_info.velocity;
                         break;
                     }
 
                     case SDLK_d:
                     {
-                        g_game_state.p_char_texture = g_game_state.char_assets.named.p_right1;
+                        g_state.char_info.p_texture = g_state.char_assets.named.p_right1;
+                        g_state.char_info.x        += g_state.char_info.velocity;
                         break;
                     }
 
@@ -122,14 +95,12 @@ void main_loop(void)
         }
     }
 
-    err_code = _render_character( g_game_state.p_char_texture,
-                                  g_game_state.char_x,
-                                  g_game_state.char_y );
+    err_code = render_character( &g_state.char_info, g_state.p_renderer );
     require_noerr(err_code, exit);
 
     // Up until now everything was drawn behind the scenes.
     // This will show the new, white contents of the g_game_state.p_window.
-    SDL_RenderPresent(g_game_state.p_renderer);
+    SDL_RenderPresent(g_state.p_renderer);
 
 exit:
     if ( err_code != 0 )
@@ -152,27 +123,27 @@ int main(int argc, char* argv[])
     require(err_code & IMG_INIT_PNG, exit);
 
     // Create an application g_game_state.p_window with the following settings:
-    g_game_state.p_window = SDL_CreateWindow( "Hello World",           // g_game_state.p_window title
+    g_state.p_window = SDL_CreateWindow( "Hello World",           // g_game_state.p_window title
                                               SDL_WINDOWPOS_UNDEFINED, // initial x position
                                               SDL_WINDOWPOS_UNDEFINED, // initial y position
-                                              g_game_state.window_w,   // width, in pixels
-                                              g_game_state.window_h,   // height, in pixels
+                                              g_state.window_w,   // width, in pixels
+                                              g_state.window_h,   // height, in pixels
                                               0 );                     // flags
-    require( g_game_state.p_window != NULL, exit );
+    require( g_state.p_window != NULL, exit );
 
-    g_game_state.p_renderer = SDL_CreateRenderer(g_game_state.p_window, -1, SDL_RENDERER_ACCELERATED);
-    require( g_game_state.p_renderer != NULL, exit );
+    g_state.p_renderer = SDL_CreateRenderer(g_state.p_window, -1, SDL_RENDERER_ACCELERATED);
+    require( g_state.p_renderer != NULL, exit );
 
     // Set the draw color to black
-    err_code = SDL_SetRenderDrawColor(g_game_state.p_renderer, 0, 0, 0, 255);
+    err_code = SDL_SetRenderDrawColor(g_state.p_renderer, 0, 0, 0, 255);
     require_noerr(err_code, exit);
 
     // Clear the entire screen to our selected color
-    err_code = SDL_RenderClear(g_game_state.p_renderer);
+    err_code = SDL_RenderClear(g_state.p_renderer);
     require_noerr(err_code, exit);
 
     // Load assets
-    err_code = CharAssets_Load(g_game_state.p_renderer, &g_game_state.char_assets);
+    err_code = CharAssets_Load(g_state.p_renderer, &g_state.char_assets);
     require_noerr(err_code, exit);
 
     // Set the initial game state
@@ -198,11 +169,11 @@ int main(int argc, char* argv[])
 
 
 exit:
-    SDL_DestroyRenderer(g_game_state.p_renderer);
-    SDL_DestroyWindow(g_game_state.p_window);
+    SDL_DestroyRenderer(g_state.p_renderer);
+    SDL_DestroyWindow(g_state.p_window);
 
-    free_textures( g_game_state.char_assets.textures,
-                   ARRAY_LEN(g_game_state.char_assets.textures) );
+    free_textures( g_state.char_assets.textures,
+                   ARRAY_LEN(g_state.char_assets.textures) );
 
     printf( "Error: %s\n", SDL_GetError() );
     SDL_Quit();
