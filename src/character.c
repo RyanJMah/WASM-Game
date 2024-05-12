@@ -1,11 +1,12 @@
 #include "macros.h"
+#include "constants.h"
 #include "character.h"
 
 void Character_Init(Character_t* character)
 {
     character->x = 0;
     character->y = 0;
-    character->velocity = 1;
+    character->velocity = CHARACTER_VELOCITY;
     character->orientation = CHAR_FACING_DOWN;
 
     character->p_texture = NULL;

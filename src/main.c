@@ -1,10 +1,13 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "macros.h"
 #include "assets.h"
+#include "constants.h"
 #include "game_state.h"
 
 #ifdef WASM
@@ -12,16 +15,13 @@
 #endif
 
 #ifndef WASM
-    #define FRAME_RATE          ( 60 )
-    #define FRAME_TIME_TICKS    ( 1000 / FRAME_RATE )
-
-    static uint32_t g_quit = 0;
+static uint32_t g_quit = 0;
 #endif
 
 static GameState_t g_state =
 {
-    .window_h = 480,
-    .window_w = 640,
+    .window_h = WINDOW_HEIGHT,
+    .window_w = WINDOW_WIDTH,
 };
 
 
@@ -50,8 +50,8 @@ static inline void _handle_user_input(void)
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
 
-        g_state.character.x += g_state.character.velocity;
-        g_state.character.y -= g_state.character.velocity;
+        g_state.character.x += g_state.character.velocity * (1 / sqrt(2));
+        g_state.character.y -= g_state.character.velocity * (1 / sqrt(2));
         key_pressed = true;
     }
 
@@ -66,8 +66,8 @@ static inline void _handle_user_input(void)
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
 
-        g_state.character.x -= g_state.character.velocity;
-        g_state.character.y -= g_state.character.velocity;
+        g_state.character.x -= g_state.character.velocity * (1 / sqrt(2));
+        g_state.character.y -= g_state.character.velocity * (1 / sqrt(2));
         key_pressed = true;
     }
 
@@ -82,8 +82,8 @@ static inline void _handle_user_input(void)
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
 
-        g_state.character.x += g_state.character.velocity;
-        g_state.character.y += g_state.character.velocity;
+        g_state.character.x += g_state.character.velocity * (1 / sqrt(2));
+        g_state.character.y += g_state.character.velocity * (1 / sqrt(2));
         key_pressed = true;
     }
 
@@ -98,8 +98,8 @@ static inline void _handle_user_input(void)
 
         Character_CycleTexture(&g_state.character, &g_state.char_assets);
 
-        g_state.character.x -= g_state.character.velocity;
-        g_state.character.y += g_state.character.velocity;
+        g_state.character.x -= g_state.character.velocity * (1 / sqrt(2));
+        g_state.character.y += g_state.character.velocity * (1 / sqrt(2));
         key_pressed = true;
     }
 
@@ -250,7 +250,7 @@ int main(int argc, char* argv[])
     _initial_game_state();
 
 #ifdef WASM
-    emscripten_set_main_loop(main_loop, 0, 1);
+    emscripten_set_main_loop(main_loop, FRAME_RATE, 1);
 #else
     while ( !g_quit )
     {

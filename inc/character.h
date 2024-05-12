@@ -15,9 +15,9 @@ typedef enum
 
 typedef struct
 {
-    uint32_t x;
-    uint32_t y;
-    uint32_t velocity;
+    double x;
+    double y;
+    double velocity;
 
     CharOrientation_t orientation;
 
