@@ -28,5 +28,6 @@ typedef struct
 void Character_Init(Character_t* character);
 
 void Character_CycleTexture(Character_t* character, CharAssets_t* assets);
+void Character_SetIdleTexture(Character_t* character, CharAssets_t* assets);
 
 int render_character(Character_t* character, SDL_Renderer* p_renderer);

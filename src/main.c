@@ -59,28 +59,64 @@ void main_loop(void)
                 {
                     case SDLK_w:    // Up
                     {
-                        g_state.character.p_texture = g_state.char_assets.named.p_up1;
+                        if ( g_state.character.orientation != CHAR_FACING_UP )
+                        {
+                            g_state.character.orientation = CHAR_FACING_UP;
+                            g_state.character.p_texture   = g_state.char_assets.named.p_up1;
+                        }
+                        else
+                        {
+                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+                        }
+
                         g_state.character.y        -= g_state.character.velocity;
                         break;
                     }
 
                     case SDLK_s:    // Down
                     {
-                        g_state.character.p_texture = g_state.char_assets.named.p_down1;
+                        if ( g_state.character.orientation != CHAR_FACING_DOWN )
+                        {
+                            g_state.character.orientation = CHAR_FACING_DOWN;
+                            g_state.character.p_texture   = g_state.char_assets.named.p_down1;
+                        }
+                        else
+                        {
+                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+                        }
+
                         g_state.character.y        += g_state.character.velocity;
                         break;
                     }
 
                     case SDLK_a:    // Left
                     {
-                        g_state.character.p_texture = g_state.char_assets.named.p_left1;
+                        if ( g_state.character.orientation != CHAR_FACING_LEFT )
+                        {
+                            g_state.character.orientation = CHAR_FACING_LEFT;
+                            g_state.character.p_texture   = g_state.char_assets.named.p_left1;
+                        }
+                        else
+                        {
+                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+                        }
+
                         g_state.character.x        -= g_state.character.velocity;
                         break;
                     }
 
                     case SDLK_d:    // Right
                     {
-                        g_state.character.p_texture = g_state.char_assets.named.p_right1;
+                        if ( g_state.character.orientation != CHAR_FACING_RIGHT )
+                        {
+                            g_state.character.orientation = CHAR_FACING_RIGHT;
+                            g_state.character.p_texture   = g_state.char_assets.named.p_right1;
+                        }
+                        else
+                        {
+                            Character_CycleTexture(&g_state.character, &g_state.char_assets);
+                        }
+
                         g_state.character.x        += g_state.character.velocity;
                         break;
                     }
@@ -120,11 +156,11 @@ int main(int argc, char* argv[])
 
     // Create an application g_game_state.p_window with the following settings:
     g_state.p_window = SDL_CreateWindow( "Hello World",           // g_game_state.p_window title
-                                              SDL_WINDOWPOS_UNDEFINED, // initial x position
-                                              SDL_WINDOWPOS_UNDEFINED, // initial y position
-                                              g_state.window_w,   // width, in pixels
-                                              g_state.window_h,   // height, in pixels
-                                              0 );                     // flags
+                                         SDL_WINDOWPOS_UNDEFINED, // initial x position
+                                         SDL_WINDOWPOS_UNDEFINED, // initial y position
+                                         g_state.window_w,   // width, in pixels
+                                         g_state.window_h,   // height, in pixels
+                                         0 );                     // flags
     require( g_state.p_window != NULL, exit );
 
     g_state.p_renderer = SDL_CreateRenderer(g_state.p_window, -1, SDL_RENDERER_ACCELERATED);

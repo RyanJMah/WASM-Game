@@ -79,6 +79,37 @@ void Character_CycleTexture(Character_t* character, CharAssets_t* assets)
     character->curr_texture_index = (character->curr_texture_index + 1) % 4;
 }
 
+void Character_SetIdleTexture(Character_t* character, CharAssets_t* assets)
+{
+    switch (character->orientation)
+    {
+        case CHAR_FACING_UP:
+        {
+            character->p_texture = assets->named.p_up1;
+            break;
+        }
+
+        default:
+        case CHAR_FACING_DOWN:
+        {
+            character->p_texture = assets->named.p_down1;
+            break;
+        }
+
+        case CHAR_FACING_LEFT:
+        {
+            character->p_texture = assets->named.p_left1;
+            break;
+        }
+
+        case CHAR_FACING_RIGHT:
+        {
+            character->p_texture = assets->named.p_right1;
+            break;
+        }
+    }
+}
+
 int render_character(Character_t* character, SDL_Renderer* p_renderer)
 {
     int err_code = 0;
