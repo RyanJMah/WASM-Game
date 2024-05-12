@@ -15,6 +15,7 @@
 #endif
 
 #ifndef WASM
+#define FRAME_TIME_TICKS        ( 1000 / FRAME_RATE )
 static uint32_t g_quit = 0;
 #endif
 

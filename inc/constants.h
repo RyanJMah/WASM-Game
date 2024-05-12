@@ -1,7 +1,6 @@
 #pragma once
 
 #define FRAME_RATE                      ( 60 )
-#define FRAME_TIME_TICKS                ( 1000 / FRAME_RATE )
 
 #define WINDOW_WIDTH                    ( 800 )
 #define WINDOW_HEIGHT                   ( 600 )
