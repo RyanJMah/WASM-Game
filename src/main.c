@@ -34,28 +34,8 @@ static inline void _initial_game_state(void)
     g_state.character.p_texture = g_state.char_assets.named.p_down1;
 }
 
-void main_loop(void)
+static inline void _handle_user_input(void)
 {
-    int err_code = 0;
-
-    SDL_Event e;
-    if ( SDL_PollEvent(&e) )
-    {
-        switch (e.type)
-        {
-            case SDL_QUIT:
-            {
-            #ifdef WASM
-                emscripten_cancel_main_loop();
-            #else
-                g_quit = 1;
-            #endif
-
-                break;
-            }
-        }
-    }
-
     const uint8_t* key_state = SDL_GetKeyboardState(NULL);
     bool key_pressed = false;
 
@@ -188,6 +168,31 @@ void main_loop(void)
     {
         Character_SetIdleTexture(&g_state.character, &g_state.char_assets);
     }
+}
+
+void main_loop(void)
+{
+    int err_code = 0;
+
+    SDL_Event e;
+    if ( SDL_PollEvent(&e) )
+    {
+        switch (e.type)
+        {
+            case SDL_QUIT:
+            {
+            #ifdef WASM
+                emscripten_cancel_main_loop();
+            #else
+                g_quit = 1;
+            #endif
+
+                break;
+            }
+        }
+    }
+
+    _handle_user_input();
 
     // Clear the entire screen to our selected color
     err_code = SDL_RenderClear(g_state.p_renderer);
