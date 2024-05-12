@@ -1,15 +1,20 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
 #include "macros.h"
+#include "assets.h"
+#include "game_state.h"
 
 #ifdef WASM
 #include <emscripten.h>
 #endif
 
-static SDL_Window*   gp_window;
-static SDL_Renderer* gp_renderer;
-static SDL_Texture*  gp_texture;
+static GameState_t g_game_state =
+{
+    .window_h = 480,
+    .window_w = 640,
+};
 
 #ifndef WASM
     #define FRAME_RATE          ( 60 )
@@ -21,6 +26,8 @@ static SDL_Texture*  gp_texture;
 void main_loop(void)
 {
     int err_code = 0;
+
+    SDL_Texture* p_texture = g_game_state.char_assets.named.p_down1;
 
     SDL_Event e;
     if ( SDL_PollEvent(&e) )
@@ -38,39 +45,53 @@ void main_loop(void)
                 break;
             }
 
+            // case SDL_KEYDOWN:
+            // {
+            //     switch (e.key.keysym.sym)
+            //     {
+            //         // wasd
+            //         case SDLK_w:
+            //         {
+
+            //         }
+            //     }
+
+            //     break;
+            // }
         }
     }
 
-
-    // Set the draw color to white
-    err_code = SDL_SetRenderDrawColor(gp_renderer, 0, 0, 0, 255);
-    check_noerr(err_code);
-
-    // Clear the entire screen to our selected color
-    err_code = SDL_RenderClear(gp_renderer);
-    check_noerr(err_code);
-
     int texWidth, texHeight;
 
-    err_code = SDL_QueryTexture(gp_texture, NULL, NULL, &texWidth, &texHeight);  // Get the width and height of the gp_texture
-    check_noerr(err_code);
+    // Get the width and height of the texture
+    err_code = SDL_QueryTexture(p_texture, NULL, NULL, &texWidth, &texHeight);
+    require_noerr(err_code, exit);
 
     texHeight *= 2;
     texWidth  *= 2;
 
     SDL_Rect dstRect;
-    dstRect.x = (640 - texWidth) / 2;  // Center the image horizontally
-    dstRect.y = (480 - texHeight) / 2;  // Center the image vertically
-    dstRect.w = texWidth;  // Use the original image width
-    dstRect.h = texHeight;  // Use the original image height
+    dstRect.x = (g_game_state.window_w - texWidth) / 2;     // Center the image horizontally
+    dstRect.y = (g_game_state.window_h - texHeight) / 2;    // Center the image vertically
+    dstRect.w = texWidth;                                   // Use the original image width
+    dstRect.h = texHeight;                                  // Use the original image height
 
-    err_code = SDL_RenderCopy(gp_renderer, gp_texture, NULL, &dstRect);  // Draw the image
-    check_noerr(err_code);
+    err_code = SDL_RenderCopy(g_game_state.p_renderer, p_texture, NULL, &dstRect);  // Draw the image
+    require_noerr(err_code, exit);
 
     // Up until now everything was drawn behind the scenes.
-    // This will show the new, white contents of the gp_window.
-    SDL_RenderPresent(gp_renderer);
+    // This will show the new, white contents of the g_game_state.p_window.
+    SDL_RenderPresent(g_game_state.p_renderer);
+
+exit:
+    if ( err_code != 0 )
+    {
+        printf( "Error: %s\n", SDL_GetError() );
+    }
+
+    return;
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -83,20 +104,30 @@ int main(int argc, char* argv[])
     err_code = IMG_Init(IMG_INIT_PNG);
     require(err_code & IMG_INIT_PNG, exit);
 
-    // Create an application gp_window with the following settings:
-    gp_window = SDL_CreateWindow( "Hello World",           // gp_window title
-                               SDL_WINDOWPOS_UNDEFINED, // initial x position
-                               SDL_WINDOWPOS_UNDEFINED, // initial y position
-                               640,                     // width, in pixels
-                               480,                     // height, in pixels
-                               0 );                     // flags
-    require( gp_window != NULL, exit );
+    // Create an application g_game_state.p_window with the following settings:
+    g_game_state.p_window = SDL_CreateWindow( "Hello World",           // g_game_state.p_window title
+                                              SDL_WINDOWPOS_UNDEFINED, // initial x position
+                                              SDL_WINDOWPOS_UNDEFINED, // initial y position
+                                              g_game_state.window_w,   // width, in pixels
+                                              g_game_state.window_h,   // height, in pixels
+                                              0 );                     // flags
+    require( g_game_state.p_window != NULL, exit );
 
-    gp_renderer = SDL_CreateRenderer(gp_window, -1, SDL_RENDERER_ACCELERATED);
-    require( gp_renderer != NULL, exit );
+    g_game_state.p_renderer = SDL_CreateRenderer(g_game_state.p_window, -1, SDL_RENDERER_ACCELERATED);
+    require( g_game_state.p_renderer != NULL, exit );
 
-    gp_texture = IMG_LoadTexture( gp_renderer, PATH_CONCAT3(ASSETS_PATH, "character", "down1.png") );
-    require( gp_texture != NULL, exit );
+    // Set the draw color to black
+    err_code = SDL_SetRenderDrawColor(g_game_state.p_renderer, 0, 0, 0, 255);
+    require_noerr(err_code, exit);
+
+    // Clear the entire screen to our selected color
+    err_code = SDL_RenderClear(g_game_state.p_renderer);
+    require_noerr(err_code, exit);
+
+    // Load assets
+    err_code = CharAssets_Load(g_game_state.p_renderer, &g_game_state.char_assets);
+    require_noerr(err_code, exit);
+
 
 #ifdef WASM
     emscripten_set_main_loop(main_loop, 0, 1);
@@ -114,14 +145,14 @@ int main(int argc, char* argv[])
             SDL_Delay(FRAME_TIME_TICKS - frame_time);
         }
     }
-
-
 #endif
 
 exit:
-    SDL_DestroyRenderer(gp_renderer);
-    SDL_DestroyWindow(gp_window);
-    SDL_DestroyTexture(gp_texture);
+    SDL_DestroyRenderer(g_game_state.p_renderer);
+    SDL_DestroyWindow(g_game_state.p_window);
+
+    free_textures( g_game_state.char_assets.textures,
+                   ARRAY_LEN(g_game_state.char_assets.textures) );
 
     printf( "Error: %s\n", SDL_GetError() );
     SDL_Quit();
