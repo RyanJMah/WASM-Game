@@ -28,7 +28,7 @@ static GameState_t g_state =
 
 static inline void _initial_game_state(void)
 {
-    g_state.curr_scale = 1;
+    g_state.curr_scale = ZOOM_SCALE;
 
     Character_Init(&g_state.character);
 
@@ -200,7 +200,9 @@ void main_loop(void)
     require_noerr(err_code, exit);
 
     // Render the character
-    err_code = render_character( &g_state.character, g_state.p_renderer );
+    err_code = render_character( &g_state.character,
+                                  g_state.p_renderer,
+                                 &g_state.curr_scale );
     require_noerr(err_code, exit);
 
     // Up until now everything was drawn behind the scenes.

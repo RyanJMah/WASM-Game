@@ -14,7 +14,7 @@ typedef struct
     uint32_t window_h;
     uint32_t window_w;
 
-    uint32_t curr_scale;
+    float curr_scale;
 
     Character_t character;
 } GameState_t;

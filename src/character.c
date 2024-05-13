@@ -85,7 +85,9 @@ void Character_SetIdleTexture(Character_t* character, CharAssets_t* assets)
     character->p_texture = _get_base_texture(character, assets);
 }
 
-int render_character(Character_t* character, SDL_Renderer* p_renderer)
+int render_character( Character_t* character,
+                      SDL_Renderer* p_renderer,
+                      float* p_scale )
 {
     int err_code = 0;
 
@@ -95,8 +97,8 @@ int render_character(Character_t* character, SDL_Renderer* p_renderer)
     err_code = SDL_QueryTexture(*character->p_texture, NULL, NULL, &texWidth, &texHeight);
     require_noerr(err_code, exit);
 
-    texHeight *= 2;
-    texWidth  *= 2;
+    texHeight *= (*p_scale);
+    texWidth  *= (*p_scale);
 
     SDL_Rect dstRect;
     dstRect.x = character->x;
