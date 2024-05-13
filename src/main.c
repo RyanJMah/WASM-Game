@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
     require( g_state.p_renderer != NULL, exit );
 
     // Set the draw color to black
-    err_code = SDL_SetRenderDrawColor(g_state.p_renderer, 0, 0, 0, 255);
+    err_code = SDL_SetRenderDrawColor(g_state.p_renderer, 255, 255, 255, 255);
     require_noerr(err_code, exit);
 
     // Load assets
